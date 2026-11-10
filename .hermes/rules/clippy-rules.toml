@@ -1,0 +1,15 @@
+[lints.clippy]
+# Correctness
+correctness = "deny"
+suspicious = "warn"
+complexity = "warn"
+perf = "warn"
+style = "warn"
+pedantic = "allow"
+nursery = "allow"
+cargo = "allow"
+restriction = "allow"
+
+# Hermes-specific
+max_lines = { level = "warn", args = [350] }
+no_print = { level = "warn" }  # Use log crate instead

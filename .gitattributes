@@ -1,0 +1,63 @@
+# .gitattributes - Git attributes for Hermes Game Studios
+
+# Text files
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.gd text eol=lf
+*.cs text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.awk text eol=lf
+*.cjs text eol=lf
+*.txt text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+
+# Large text files - treat as binary for diff
+*.log binary
+*.sqlite binary
+*.db binary
+*.pkl binary
+
+# Export settings
+export-ignore .gitignore
+export-ignore .gitattributes
+export-ignore .worktreeinclude
+export-ignore HERMES.md
+export-ignore AGENTS.md
+export-ignore CLAUDE.md
+export-ignore CHANGELOG.md
+export-ignore CONTRIBUTING.md
+export-ignore LICENSE
+export-ignore README.md
+export-ignore SECURITY.md
+export-ignore UPGRADING.md
+export-ignore project.yaml
+# export-ignore for directories handled by .gitignore

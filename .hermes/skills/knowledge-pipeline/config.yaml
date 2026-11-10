@@ -1,0 +1,193 @@
+knowledge_pipeline:
+  vault_path: "C:/Users/mathe/Hermes_Brain"
+  
+  # Capture settings
+  capture:
+    inbox_paths:
+      - "00-Inbox"
+      - "50-Meta/00-Inbox"
+    external_scan_paths:
+      - "C:/Users/mathe/Downloads"
+      - "C:/Users/mathe/Desktop"
+      - "C:/Users/mathe/Documents"
+    exclude_patterns:
+      - "*.tmp"
+      - "*.log"
+      - ".git/"
+      - "node_modules/"
+      - "__pycache__/"
+    template: "[[{{date}}]] | #{{type}} #{{context}}\n{{content}}\n#revisar"
+    auto_tag_types:
+      - "ideia"
+      - "tarefa"
+      - "referencia"
+      - "fleeting"
+      - "problema"
+      - "insight"
+      - "decisao"
+    default_type: "fleeting"
+    default_context: "geral"
+    max_content_length: 50000
+    deduplicate: true
+    similarity_threshold: 0.85
+  
+  # Organize settings
+  organize:
+    para_mapping:
+      projects: "10-Projetos"
+      areas: "20-Areas"
+      resources: "30-Recursos"
+      archive: "40-Arquivo"
+      meta: "50-Meta"
+      system: "90-Sistema"
+      projeto: "10-Projetos"
+      area: "20-Areas"
+      recurso: "30-Recursos"
+      arquivo: "40-Arquivo"
+      sistema: "90-Sistema"
+    inbox_paths:
+      - "00-Inbox"
+      - "50-Meta/00-Inbox"
+    routing_rules:
+      ideia: "projects"
+      tarefa: "projects"
+      problema: "projects"
+      insight: "resources"
+      referencia: "resources"
+      decisao: "meta"
+      reuniao: "meta"
+      fleeting: "inbox"
+    drift_detection:
+      enabled: true
+      scan_paths:
+        - "C:/Users/mathe/Downloads"
+        - "C:/Users/mathe/Desktop"
+        - "C:/Users/mathe/Documents"
+      exclude_patterns:
+        - "*.tmp"
+        - "*.log"
+        - "*.dll"
+        - "*.exe"
+        - "*.pdb"
+        - "*.bin"
+        - "*.dat"
+        - ".git/"
+        - "node_modules/"
+        - "__pycache__/"
+      dry_run_default: true
+      max_loose_files_alert: 10
+    auto_tagging:
+      enabled: true
+      tag_taxonomy_path: "30-Recursos/_taxonomy/tags.md"
+      suggest_new_tags: true
+    process_recursive: true
+    max_files_per_run: 100
+  
+  # Distill settings
+  distill:
+    layers:
+      "1":
+        name: "Highlights"
+        description: "Raw quotes, highlights, captures"
+        template: "templates/layer1-highlight.md"
+        min_length: 50
+      "2":
+        name: "Literature Notes"
+        description: "Summary in own words, initial connections"
+        template: "templates/layer2-literature.md"
+        min_length: 200
+      "3":
+        name: "Resource Notes"
+        description: "Organized synthesis for practical use"
+        template: "templates/layer3-resource.md"
+        min_length: 500
+      "4":
+        name: "Atomic Notes"
+        description: "One idea, own words, atomic, linkable"
+        template: "templates/layer4-atomic.md"
+        min_length: 100
+    auto_link:
+      enabled: true
+      min_similarity: 0.7
+      max_links_per_note: 10
+      link_types:
+        - "references"
+        - "related"
+        - "contrasts"
+        - "extends"
+    tagging:
+      enabled: true
+      suggest_tags: true
+      tag_taxonomy_path: "30-Recursos/_taxonomy/tags.md"
+      max_tags_per_note: 8
+    target_layers:
+      - 1
+      - 2
+      - 3
+      - 4
+    synthesis_model: "nemotron-3-ultra"
+    max_concurrent: 3
+  
+  # Express settings
+  express:
+    output_types:
+      article:
+        name: "Article"
+        template: "templates/express-article.md"
+        sections:
+          - "intro"
+          - "body"
+          - "conclusion"
+          - "references"
+        description: "Long-form article for blog/publication"
+      report:
+        name: "Report"
+        template: "templates/express-report.md"
+        sections:
+          - "executive_summary"
+          - "findings"
+          - "recommendations"
+          - "appendix"
+        description: "Structured report for stakeholders"
+      doc:
+        name: "Documentation"
+        template: "templates/express-doc.md"
+        sections:
+          - "overview"
+          - "details"
+          - "examples"
+          - "see_also"
+        description: "Technical documentation"
+      newsletter:
+        name: "Newsletter"
+        template: "templates/express-newsletter.md"
+        sections:
+          - "headline"
+          - "stories"
+          - "insights"
+          - "cta"
+        description: "Email newsletter format"
+    synthesis_model: "nemotron-3-ultra"
+    max_sources: 15
+    citation_style: "wiki"
+    output_dir: "10-Projetos/_outputs/express/"
+    auto_save: true
+    min_sources: 3
+    max_tokens_per_section: 1000
+  
+  # Schedule (cron expressions)
+  schedule:
+    capture_external: "*/30 * * * *"
+    organize_inbox: "0 * * * *"
+    detect_drift: "0 9 * * *"
+    distill_pending: "0 2 * * *"
+    express_scheduled: "0 6 * * 1"
+    review_weekly: "0 8 * * 1"
+    review_monthly: "0 9 1 * *"
+    index_update: "*/30 * * * *"
+  
+  # Token Optimization (inherited by default)
+  token_optimization:
+    enabled: true
+    inherit_by_default: true
+    budget_profile: "analysis"

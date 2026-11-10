@@ -1,0 +1,23 @@
+[package]
+name = "hermes-game-studios"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = []
+resolver = "2"
+
+[workspace.lints.clippy]
+correctness = { level = "deny", priority = -1 }
+suspicious = "warn"
+complexity = "warn"
+perf = "warn"
+style = "warn"
+pedantic = { level = "allow", priority = -1 }
+nursery = { level = "allow", priority = -1 }
+cargo = { level = "allow", priority = -1 }
+restriction = { level = "allow", priority = -1 }
+
+# Hermes-specific
+max_lines = { level = "warn", args = [350] }
+no_print = { level = "warn" }  # Use log crate instead

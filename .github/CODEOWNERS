@@ -1,0 +1,38 @@
+# Code Owners
+
+This file defines who is responsible for reviewing changes to different parts of the repository.
+
+## Core Maintainers
+* @hermes-game-studios-maintainers
+
+## Template Structure
+/                               @hermes-game-studios-maintainers
+/.hermes/                       @hermes-game-studios-maintainers
+/scripts/                       @hermes-game-studios-maintainers
+
+## Skills
+/.hermes/skills/                @hermes-game-studios-skills
+
+## Agents
+/.hermes/agents/                @hermes-game-studios-agents
+
+## Hooks & Scripts
+/.hermes/hooks/                 @hermes-game-studios-ops
+/.hermes/scripts/               @hermes-game-studios-ops
+/scripts/                       @hermes-game-studios-ops
+
+## Quality Gates
+/.hermes/rules/                 @hermes-game-studios-quality
+/package.json                   @hermes-game-studios-quality
+
+## Configuration
+/.hermes/ai-gateway/            @hermes-game-studios-ops
+/.hermes/contracts/             @hermes-game-studios-arch
+/project.yaml                   @hermes-game-studios-arch
+/HERMES.md                      @hermes-game-studios-arch
+/AGENTS.md                      @hermes-game-studios-arch
+
+## Documentation
+/README.md                      @hermes-game-studios-docs
+/CONTRIBUTING.md                @hermes-game-studios-docs
+/CHANGELOG.md                   @hermes-game-studios-docs

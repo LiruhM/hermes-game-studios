@@ -1,0 +1,366 @@
+skills:
+  hermes-help:
+    category: Onboarding
+    type: prompt
+    model_tier: inherit
+    source: help
+  hermes-project-stage-detect:
+    category: Onboarding
+    type: skill
+    model_tier: inherit
+    source: project-stage-detect
+  hermes-setup-engine:
+    category: Onboarding
+    type: skill
+    model_tier: inherit
+    source: setup-engine
+  hermes-adopt:
+    category: Onboarding
+    type: skill
+    model_tier: inherit
+    source: adopt
+  hermes-brainstorm:
+    category: Game Design
+    type: prompt
+    model_tier: inherit
+    source: brainstorm
+  hermes-map-systems:
+    category: Game Design
+    type: skill
+    model_tier: inherit
+    source: map-systems
+  hermes-design-system:
+    category: Game Design
+    type: skill
+    model_tier: inherit
+    source: design-system
+  hermes-quick-design:
+    category: Game Design
+    type: skill
+    model_tier: inherit
+    source: quick-design
+  hermes-review-all-gdds:
+    category: Game Design
+    type: skill
+    model_tier: architecture
+    source: review-all-gdds
+  hermes-propagate-design-change:
+    category: Game Design
+    type: skill
+    model_tier: inherit
+    source: propagate-design-change
+  hermes-art-bible:
+    category: Art & Assets
+    type: skill
+    model_tier: inherit
+    source: art-bible
+  hermes-asset-spec:
+    category: Art & Assets
+    type: skill
+    model_tier: inherit
+    source: asset-spec
+  hermes-asset-audit:
+    category: Art & Assets
+    type: skill
+    model_tier: inherit
+    source: asset-audit
+  hermes-ux-design:
+    category: UX & Interface
+    type: skill
+    model_tier: inherit
+    source: ux-design
+  hermes-ux-review:
+    category: UX & Interface
+    type: skill
+    model_tier: inherit
+    source: ux-review
+  hermes-create-architecture:
+    category: Architecture
+    type: skill
+    model_tier: inherit
+    source: create-architecture
+  hermes-architecture-decision:
+    category: Architecture
+    type: skill
+    model_tier: inherit
+    source: architecture-decision
+  hermes-architecture-review:
+    category: Architecture
+    type: skill
+    model_tier: architecture
+    source: architecture-review
+  hermes-create-control-manifest:
+    category: Architecture
+    type: skill
+    model_tier: inherit
+    source: create-control-manifest
+  hermes-create-epics:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: create-epics
+  hermes-create-stories:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: create-stories
+  hermes-dev-story:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: dev-story
+  hermes-sprint-plan:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: sprint-plan
+  hermes-sprint-status:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: sprint-status
+  hermes-story-readiness:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: story-readiness
+  hermes-story-done:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: story-done
+  hermes-estimate:
+    category: Stories & Sprints
+    type: skill
+    model_tier: inherit
+    source: estimate
+  hermes-design-review:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: design-review
+  hermes-code-review:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: code-review
+  hermes-balance-check:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: balance-check
+  hermes-content-audit:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: content-audit
+  hermes-scope-check:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: scope-check
+  hermes-perf-profile:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: perf-profile
+  hermes-tech-debt:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: tech-debt
+  hermes-gate-check:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: architecture
+    source: gate-check
+  hermes-consistency-check:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: consistency-check
+  hermes-security-audit:
+    category: Reviews & Analysis
+    type: skill
+    model_tier: inherit
+    source: security-audit
+  hermes-qa-plan:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: qa-plan
+  hermes-smoke-check:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: smoke-check
+  hermes-soak-test:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: soak-test
+  hermes-regression-suite:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: regression-suite
+  hermes-test-setup:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: test-setup
+  hermes-test-helpers:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: test-helpers
+  hermes-test-evidence-review:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: test-evidence-review
+  hermes-test-flakiness:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: test-flakiness
+  hermes-skill-test:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: skill-test
+  hermes-skill-improve:
+    category: QA & Testing
+    type: skill
+    model_tier: inherit
+    source: skill-improve
+  hermes-milestone-review:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: milestone-review
+  hermes-retrospective:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: retrospective
+  hermes-bug-report:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: bug-report
+  hermes-bug-triage:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: bug-triage
+  hermes-reverse-document:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: reverse-document
+  hermes-playtest-report:
+    category: Production
+    type: skill
+    model_tier: inherit
+    source: playtest-report
+  hermes-release-checklist:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: release-checklist
+  hermes-launch-checklist:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: launch-checklist
+  hermes-changelog:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: changelog
+  hermes-patch-notes:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: patch-notes
+  hermes-hotfix:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: hotfix
+  hermes-day-one-patch:
+    category: Release
+    type: skill
+    model_tier: inherit
+    source: day-one-patch
+  hermes-prototype:
+    category: Creative & Content
+    type: skill
+    model_tier: inherit
+    source: prototype
+  hermes-vertical-slice:
+    category: Creative & Content
+    type: skill
+    model_tier: inherit
+    source: vertical-slice
+  hermes-onboard:
+    category: Creative & Content
+    type: skill
+    model_tier: inherit
+    source: onboard
+  hermes-localize:
+    category: Creative & Content
+    type: skill
+    model_tier: inherit
+    source: localize
+  hermes-team-combat:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-combat
+  hermes-team-narrative:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-narrative
+  hermes-team-ui:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-ui
+  hermes-team-release:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-release
+  hermes-team-polish:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-polish
+  hermes-team-audio:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-audio
+  hermes-team-level:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-level
+  hermes-team-live-ops:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-live-ops
+  hermes-team-qa:
+    category: Team Orchestration
+    type: skill
+    model_tier: inherit
+    source: team-qa
+  hermes-settings:
+    category: Onboarding
+    type: cli
+    model_tier: inherit
+    source: settings

@@ -1,0 +1,19 @@
+{
+  "name": "hermes-game-studios",
+  "version": "0.1.0",
+  "description": "Native Hermes (Nous Research) game development studio template",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .js,.ts,.cjs,.mjs --config .hermes/rules/eslint-index.cjs",
+    "lint:fix": "eslint . --ext .js,.ts,.cjs,.mjs --config .hermes/rules/eslint-index.cjs --fix",
+    "lint:core": "eslint . --ext .js,.ts,.cjs,.mjs --config .hermes/rules/eslint-core-rules.cjs",
+    "lint:utils": "eslint . --ext .js,.ts,.cjs,.mjs --config .hermes/rules/eslint-utils.cjs"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

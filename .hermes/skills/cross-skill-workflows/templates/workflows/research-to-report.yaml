@@ -1,0 +1,72 @@
+name: research-to-report
+version: "1.0"
+description: "Full research pipeline: search → capture → distill → create report → notify"
+inputs:
+  - name: topic
+    type: string
+    required: true
+    description: "Topic to research"
+  - name: depth
+    type: string
+    enum: [quick, deep]
+    default: deep
+    description: "Research depth"
+
+steps:
+  - id: research
+    skill: research-tools
+    action: search
+    params:
+      query: "{{inputs.topic}}"
+      limit: 10
+      depth: "{{inputs.depth}}"
+    outputs: [papers, sources]
+    timeout: 120
+    description: "Search for papers and sources on the topic"
+
+  - id: organize
+    skill: second-brain-pipeline
+    action: capture
+    params:
+      content: "{{steps.research.outputs.papers}}"
+      topic: "{{inputs.topic}}"
+    depends_on: [research]
+    outputs: [note_ids]
+    description: "Capture research results to vault"
+
+  - id: distill
+    skill: second-brain-pipeline
+    action: distill
+    params:
+      note_ids: "{{steps.organize.outputs.note_ids}}"
+    depends_on: [organize]
+    outputs: [summary]
+    description: "Distill notes into summary"
+
+  - id: report
+    skill: productivity-tools
+    action: create_document
+    params:
+      template: research-report
+      data:
+        topic: "{{inputs.topic}}"
+        summary: "{{steps.distill.outputs.summary}}"
+        sources: "{{steps.research.outputs.sources}}"
+    depends_on: [distill]
+    outputs: [doc_path]
+    description: "Create formatted research report"
+
+  - id: notify
+    skill: productivity-tools
+    action: ntfy_notify
+    params:
+      message: "✅ Research complete: {{inputs.topic}} — {{steps.report.outputs.doc_path}}"
+    depends_on: [report]
+    description: "Send notification"
+
+execution:
+  parallel_groups:
+    - [research]
+    - [organize]
+    - [distill]
+    - [report, notify]

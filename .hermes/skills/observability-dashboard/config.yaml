@@ -1,0 +1,95 @@
+observability_dashboard:
+  # Collection
+  collection_interval_seconds: 30
+  retention_days: 30
+  
+  # Storage
+  metrics_db: "90-Sistema/_data/observability.db"
+  vault_sync: true
+  vault_path: "C:/Users/mathe/Hermes_Brain/50-Meta/observability"
+  
+  # Data sources
+  sources:
+    - cross_skill_workflows
+    - token_optimization
+    - skill_composability
+    - skill_marketplace
+    - hermes_squad_core
+    - system
+  
+  # Dashboards
+  dashboards:
+    tui:
+      enabled: true
+      refresh_rate: 5
+      theme: "monokai"
+    web:
+      enabled: true
+      host: "0.0.0.0"
+      port: 8080
+      auth: false
+    prometheus:
+      enabled: true
+      port: 9090
+      path: "/metrics"
+    grafana:
+      enabled: false
+      datasource: "prometheus"
+  
+  # Alerts
+  alerts:
+    enabled: true
+    channels:
+      - console
+      - ntfy
+    ntfy_topic: "hermes-mathe-producao"
+    rules:
+      - name: high_token_usage
+        metric: "token_usage_pct"
+        threshold: 80
+        operator: ">"
+        severity: "warning"
+        description: "Token budget usage above 80%"
+      - name: critical_token_usage
+        metric: "token_usage_pct"
+        threshold: 95
+        operator: ">"
+        severity: "critical"
+        description: "Token budget usage critical"
+      - name: workflow_failure_rate
+        metric: "workflow_failure_rate"
+        threshold: 0.1
+        operator: ">"
+        severity: "critical"
+        description: "Workflow failure rate above 10%"
+      - name: skill_load_time
+        metric: "skill_load_time_ms"
+        threshold: 5000
+        operator: ">"
+        severity: "warning"
+        description: "Skill load time above 5 seconds"
+      - name: system_memory
+        metric: "system_memory_pct"
+        threshold: 85
+        operator: ">"
+        severity: "warning"
+        description: "System memory usage above 85%"
+      - name: system_cpu
+        metric: "system_cpu_pct"
+        threshold: 90
+        operator: ">"
+        severity: "warning"
+        description: "System CPU usage above 90%"
+      - name: workflow_queue_depth
+        metric: "workflow_queue_depth"
+        threshold: 50
+        operator: ">"
+        severity: "warning"
+        description: "Workflow queue depth above 50"
+  
+  # Token Optimization Integration
+  token_optimization:
+    enabled: true
+    track_budgets: true
+    track_latency: true
+    track_compression_ratio: true

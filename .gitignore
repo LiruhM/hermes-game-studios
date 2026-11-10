@@ -1,0 +1,80 @@
+# Hermes Game Studios - Git Ignore
+# Essential patterns for Hermes-native game development
+
+# Hermes local state
+.hermes/memory/active.md
+.hermes/memory/session-logs/
+.hermes/memory/skill-state/
+.hermes/settings.local.json
+
+# Session state (legacy compat)
+production/session-state/active.md
+production/session-logs/
+
+# Studio tests results
+studio-tests/results/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Engine specific (Godot)
+*.import
+*.translation
+export_presets.cfg
+
+# Engine specific (Unity)
+Library/
+Temp/
+Obj/
+Build/
+Logs/
+UserSettings/
+
+# Engine specific (Unreal)
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.env
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+.coverage
+htmlcov/
+
+# Test results
+test-results/
+*.trx
+
+# IDE
+*.sublime-workspace
+*.sublime-project

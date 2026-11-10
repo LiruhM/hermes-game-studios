@@ -1,0 +1,19 @@
+{
+  "name": "hermes-corp-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "playwright": "^1.40.0",
+    "@types/node": "^20.10.0"
+  }
+}

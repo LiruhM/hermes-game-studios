@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' ws://127.0.0.1:8081 ws://127.0.0.1:3120 http://127.0.0.1:8081 http://127.0.0.1:3120 http://127.0.0.1:8767;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Hermes-Corp</title>
+  <link rel="preload" as="script" href="/src/main.js" crossorigin="anonymous">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Mono', monospace; background: #0d1117; color: #e6edf3; overflow: hidden; }
+    #game-container { width: 100vw; height: 100vh; position: relative; }
+    canvas { display: block; }
+    #hud { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; pointer-events: none; z-index: 100; }
+    .hud-panel { background: rgba(13, 17, 23, 0.9); border: 1px solid #30363d; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #8b949e; backdrop-filter: blur(8px); }
+    .hud-panel.warning { border-color: #d29922; color: #d29922; }
+    .hud-panel.critical { border-color: #f85149; color: #f85149; }
+    #chat { position: absolute; bottom: 16px; left: 16px; width: 400px; max-height: 300px; background: rgba(13, 17, 23, 0.95); border: 1px solid #30363d; border-radius: 6px; display: flex; flex-direction: column; z-index: 100; }
+    #chat-header { padding: 8px 12px; border-bottom: 1px solid #30363d; font-weight: 600; }
+    #chat-messages { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .chat-msg { font-size: 12px; line-height: 1.4; padding: 4px 8px; border-radius: 4px; }
+    .chat-msg.own { background: #1f6feb; color: white; align-self: flex-end; }
+    .chat-msg.other { background: #21262d; }
+    .chat-msg .sender { font-weight: 600; margin-right: 8px; }
+    .chat-msg .time { color: #8b949e; font-size: 10px; margin-left: 8px; }
+    #chat-input { padding: 8px; border-top: 1px solid #30363d; display: flex; gap: 8px; }
+    #chat-input input { flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 6px 10px; color: #e6edf3; font-family: inherit; font-size: 12px; outline: none; }
+    #chat-input input:focus { border-color: #1f6feb; }
+    #meeting-panel { position: absolute; top: 60px; right: 16px; width: 280px; background: rgba(13, 17, 23, 0.95); border: 1px solid #30363d; border-radius: 6px; padding: 12px; z-index: 100; display: none; }
+    #meeting-panel.active { display: block; }
+    .meeting-item { padding: 8px; border-bottom: 1px solid #30363d; cursor: pointer; }
+    .meeting-item:hover { background: #161b22; }
+    .meeting-topic { font-weight: 600; }
+    .meeting-meta { font-size: 11px; color: #8b949e; margin-top: 2px; }
+    #npc-dialogue { position: fixed; bottom: 16px; right: 16px; width: 380px; max-height: 400px; background: rgba(13, 17, 23, 0.98); border: 1px solid #30363d; border-radius: 6px; padding: 12px; z-index: 200; display: none; }
+    #npc-dialogue.active { display: block; }
+    #npc-dialogue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #30363d; }
+    #npc-dialogue-name { font-weight: 600; }
+    #npc-dialogue-emotion { font-size: 11px; color: #8b949e; text-transform: capitalize; }
+    #npc-dialogue-text { font-size: 13px; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
+    #npc-dialogue-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { padding: 6px 12px; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #e6edf3; font-family: inherit; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+    .btn:hover { background: #30363d; border-color: #8b949e; }
+    .btn-primary { background: #1f6feb; border-color: #1f6feb; }
+    .btn-danger { background: #da3633; border-color: #da3633; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #loading { position: fixed; inset: 0; background: #0d1117; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; gap: 16px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid #30363d; border-top-color: #1f6feb; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* P1 — conversa NPC↔NPC: bolhas de fala ambiente + indicadores (§7) */
+    #speech-bubbles, #conversation-indicators {
+      position: absolute; top: 0; left: 0; width: 0; height: 0;
+      pointer-events: none; z-index: 150; overflow: visible;
+    }
+    .speech-bubble {
+      position: absolute; transform: translate(-50%, 100%);
+      background: rgba(13, 17, 23, 0.95); border: 1px solid #30363d;
+      border-radius: 8px; padding: 5px 9px; max-width: 180px;
+      font-size: 11px; line-height: 1.4; color: #e6edf3;
+      font-family: 'IBM Plex Mono', monospace; white-space: normal;
+      word-break: break-word; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .conversation-indicator {
+      position: absolute; transform: translate(-50%, 0);
+      font-size: 12px; line-height: 1;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <span>Conectando ao Hermes-Corp...</span>
+  </div>
+  
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <canvas id="hud-canvas"></canvas>
+    
+    <div id="hud">
+      <div class="hud-panel" id="hud-tokens">
+        <span id="tokens-label">Tokens:</span>
+        <span id="tokens-value">0 / 500k</span>
+      </div>
+      <div class="hud-panel" id="hud-circuit">
+        <span id="circuit-label">Circuit:</span>
+        <span id="circuit-value">🟢 Closed</span>
+      </div>
+      <div class="hud-panel" id="hud-watchdog">
+        <span id="watchdog-label">Watchdog:</span>
+        <span id="watchdog-value">🟢 Active</span>
+      </div>
+    </div>
+    
+    <div id="chat">
+      <div id="chat-header">Chat - Main Office</div>
+      <div id="chat-messages"></div>
+      <div id="chat-input">
+        <input type="text" id="chat-input-field" placeholder="Digite uma mensagem..." autocomplete="off">
+      </div>
+    </div>
+    
+    <div id="meeting-panel">
+      <div style="font-weight: 600; margin-bottom: 8px;">Reuniões</div>
+      <div id="meeting-list"></div>
+    </div>
+    
+    <div id="npc-dialogue">
+      <div id="npc-dialogue-header">
+        <div>
+          <div id="npc-dialogue-name"></div>
+          <div id="npc-dialogue-emotion"></div>
+        </div>
+        <button class="btn" onclick="closeNPCDialogue()">✕</button>
+      </div>
+      <div id="npc-dialogue-text"></div>
+      <div id="npc-dialogue-actions"></div>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

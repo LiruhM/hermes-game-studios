@@ -1,0 +1,41 @@
+cross_skill_workflows:
+  # Storage
+  state_db: "90-Sistema/_data/workflow-state.db"
+  workflows_dir: "workflows"
+  vault_sync: true
+  vault_path: "C:/Users/mathe/Hermes_Brain/50-Meta/workflows"
+  
+  # Execution
+  max_parallel_steps: 4
+  default_timeout_seconds: 300
+  retry_policy:
+    max_attempts: 3
+    backoff_seconds: [5, 30, 120]
+    exponential: true
+  
+  # Skills available for workflows
+  skill_registry:
+    - skill-composability
+    - skill-marketplace
+    - token-optimization
+    - second-brain-pipeline
+    - hermes-squad-core
+    - productivity-tools
+    - research-tools
+    - creative-tools
+    - devops-tools
+    - mlops-tools
+    - media-tools
+    - note-taking-tools
+    - software-dev-tools
+  
+  # Observability
+  events:
+    enabled: true
+    sink: "sqlite"
+    include_step_outputs: true
+  
+  # Human-in-the-loop
+  approval_gates:
+    enabled: true
+    default_timeout_minutes: 60

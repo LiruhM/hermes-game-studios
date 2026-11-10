@@ -1,0 +1,79 @@
+# Alice → All: Curator Services Contract
+# Published by Alice (Curadoria-Chefe)
+contract_version: "1.0"
+issued_by: "Alice-Curadoria"
+issued_at: "2026-11-09T08:00:00Z"
+expires_at: null
+
+services:
+  vault_para:
+    path: "~/Hermes_Brain"
+    structure:
+      "10-Projetos/Hermes-Game-Studios/": "Project docs mirror"
+      "30-Recursos/templates/": "Templates CCGS + Hermes"
+      "30-Recursos/gates/": "Director gates definitions"
+      "30-Recursos/engine-reference/": "Engine API snapshots"
+      "30-Recursos/hooks/": "Hook references"
+      "90-Sistema/_embeddings/": "Memory-Substrate indices"
+    operations:
+      - "read_file(path)"
+      - "write_file(path, content)"
+      - "search_files(pattern, path)"
+      - "dataview_query(query)"
+
+  mempalace:
+    endpoint: "http://localhost:8765"
+    wings: ["10_projetos", "areas", "hermes_brain", "inbox", "recursos"]
+    operations:
+      - "wake_up(entity)"
+      - "traverse(entity, max_depth)"
+      - "store_drawer(wing, room, drawer, content)"
+      - "recall(query)"
+
+  memory_substrate:
+    api: "http://127.0.0.1:8766"
+    endpoints:
+      - "POST /query"
+      - "POST /search"
+      - "POST /traverse"
+      - "GET /entity/{entity}"
+      - "POST /index"
+      - "GET /stats"
+      - "GET /health"
+      - "GET /plan"
+
+  research:
+    capabilities:
+      - "web_search(query, limit)"
+      - "web_extract(urls)"
+      - "blocked_page_recovery(url)"
+      - "source_validation(url)"
+    deliverable: "reference/RESEARCH-<TOPIC>.md"
+
+  skill_authoring:
+    template: ".hermes/templates/skill-template.md"
+    validation: "hermes-skill-test"
+    improvement: "hermes-skill-improve"
+    registry: ".hermes/skills/registry.yaml"
+
+slos:
+  vault_read_p99_ms: 50
+  vault_write_p99_ms: 100
+  mempalace_wake_up_p99_ms: 200
+  memory_substrate_query_p99_ms: 2000
+  research_delivery_hours: 4
+
+access_control:
+  nephy: ["vault_para:read", "vault_para:write:architecture", "mempalace:all", "memory_substrate:all", "research:all"]
+  morgana: ["vault_para:read", "vault_para:write:impl", "mempalace:read", "memory_substrate:search", "research:tech"]
+  debora: ["vault_para:read", "mempalace:read", "memory_substrate:search", "research:qa"]
+  liruh: ["vault_para:read", "vault_para:write:ops", "mempalace:read", "memory_substrate:search", "research:ops"]
+  alice: ["vault_para:all", "mempalace:all", "memory_substrate:all", "research:all", "skill_authoring:all"]
+
+handoff_protocol:
+  1: "Any sector needs knowledge -> requests Alice via Liruh"
+  2: "Alice executes research/query on Vault/MemPalace/Memory-Substrate"
+  3: "Alice delivers artefact in reference/ or 30-Recursos/"
+  4: "Requesting sector uses artefact as primary source (no re-research)"
+  5: "If research involves license/copyright -> Alice validates BEFORE delivering"
+  6: "Web material -> Alice downloads, verifies HTTP 200 + wc, saves local, child uses ONLY local file"

@@ -1,0 +1,136 @@
+{
+  "project": "Hermes Game Studios",
+  "version": "0.1.0",
+  "engine": "godot",
+  "model_tiers": {
+    "architecture": "nvidia/nemotron-3-ultra",
+    "implementation": "nvidia/nemotron-3-ultra",
+    "inherit": "nvidia/nemotron-3-ultra"
+  },
+  "review_mode": "full",
+  "skills_dir": ".hermes/skills",
+  "agents_dir": ".hermes/agents",
+  "hooks_dir": ".hermes/hooks",
+  "scripts_dir": ".hermes/scripts",
+  "rules_dir": ".hermes/rules",
+  "prompts_dir": ".hermes/prompts",
+  "memory_dir": ".hermes/memory",
+  "contracts_dir": ".hermes/contracts",
+  "code_root": "src/",
+  "test_root": "tests/",
+  "assets_root": "assets/",
+  "vault_path": "~/Hermes_Brain",
+  "mempalace_endpoint": "http://localhost:8765",
+  "memory_substrate_api": "http://127.0.0.1:8766",
+  "ntfy_topic": "hermes-mathe-r8gemiyxxm",
+  "gate_definitions_dir": ".hermes/agents/gates",
+  "studio_tests_dir": "studio-tests",
+  "production_dir": "production",
+  "design_dir": "design",
+  "docs_dir": "docs",
+  "tools_dir": "tools",
+  "prototypes_dir": "prototypes",
+  "ci_provider": "github",
+  "free_only_providers": true,
+  "provider_fallback_chain": [
+    "nvidia",
+    "openrouter",
+    "ollama"
+  ],
+  "token_optimizer": {
+    "enabled": true,
+    "checkpoint_interval": 300,
+    "compression_threshold": 0.8
+  },
+  "headroom": {
+    "enabled": false,
+    "reason": "Free-only providers, disable for token savings"
+  },
+  "hermes_gateway": {
+    "enabled": false,
+    "reason": "Free-only providers, disable for token savings"
+  },
+  "skills": {
+    "auto_load": true,
+    "registry_file": ".hermes/skills/registry.yaml"
+  },
+  "agents": {
+    "delegate_task_role": "leaf",
+    "max_concurrent": 8,
+    "context_ceiling": 2
+  },
+  "hooks": {
+    "session_start": [
+      "log-agent.py",
+      "log-instructions.py",
+      "session-start.py"
+    ],
+    "session_end": [
+      "log-agent-stop.py",
+      "session-stop.py",
+      "pre-compact.py"
+    ],
+    "pre_write": [
+      "validate-write.py",
+      "validate-agent-artifact.py",
+      "validate-registry.py",
+      "validate-skill-change.py"
+    ],
+    "pre_read": [
+      "validate-read.py"
+    ],
+    "pre_commit": [
+      "validate-commit.py",
+      "validate-assets.py"
+    ],
+    "pre_push": [
+      "validate-push.py"
+    ],
+    "utility": [
+      "notify.py",
+      "detect-gaps.py",
+      "update-check.py",
+      "yaml-helper.py"
+    ]
+  },
+  "scripts": {
+    "extension_map": {
+      ".sh": "bash",
+      ".py": "python",
+      ".gd": "godot",
+      ".awk": "awk"
+    },
+    "timeout_seconds": 60
+  },
+  "rules": {
+    "eslint": {
+      "core": "eslint-core-rules.cjs",
+      "utils": "eslint-utils.cjs",
+      "index": "eslint-index.cjs"
+    },
+    "ruff": "ruff-rules.toml",
+    "clippy": "clippy-rules.toml"
+  },
+  "prompts": {
+    "auto_load": true
+  },
+  "contracts": {
+    "required": [
+      "arch-to-impl.yaml",
+      "impl-to-qa.yaml",
+      "qa-report.yaml",
+      "curator-services.yaml",
+      "ops-services.yaml"
+    ],
+    "validation_script": "scripts/validate-contract.py"
+  },
+  "git": {
+    "ignore_file": ".gitignore",
+    "attributes_file": ".gitattributes",
+    "worktree_include": ".worktreeinclude"
+  },
+  "legacy_compat": {
+    "claude_md": "CLAUDE.md",
+    "settings_json": ".claude/settings.json"
+  }
+}

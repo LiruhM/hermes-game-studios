@@ -1,0 +1,479 @@
+{
+  "description": "Fixture determinístico para o smoke test do render (BLUEPRINT §7.2/§8.3 B1-B4). Mock da API worldState.getDrawables() enquanto C não entrega a real.",
+  "manifest": {
+    "furniture_desk": {
+      "footprintW": 3,
+      "footprintH": 2,
+      "backgroundTiles": 1,
+      "furniture_height": 1
+    },
+    "furniture_plant": {
+      "footprintW": 1,
+      "footprintH": 1,
+      "backgroundTiles": 0,
+      "furniture_height": 1
+    },
+    "furniture_snack_shelf": {
+      "footprintW": 1,
+      "footprintH": 1,
+      "backgroundTiles": 0,
+      "furniture_height": 3
+    },
+    "furniture_table": {
+      "footprintW": 2,
+      "footprintH": 2,
+      "backgroundTiles": 1,
+      "furniture_height": 1
+    }
+  },
+  "rooms": {
+    "office": {
+      "room": {
+        "id": "office",
+        "name": "Escritório Principal",
+        "width": 12,
+        "height": 10,
+        "tileMap": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "doors": [
+          {
+            "col": 5,
+            "row": 0,
+            "orientation": "north",
+            "targetRoom": "meeting",
+            "label": "Reunião"
+          },
+          {
+            "col": 10,
+            "row": 4,
+            "orientation": "east",
+            "targetRoom": "meeting",
+            "label": "Corredor"
+          }
+        ]
+      },
+      "carpetTiles": [
+        {
+          "col": 2,
+          "row": 7
+        },
+        {
+          "col": 3,
+          "row": 7
+        },
+        {
+          "col": 4,
+          "row": 7
+        }
+      ],
+      "furniture": [
+        {
+          "id": "desk_main",
+          "type": "desk",
+          "col": 4,
+          "row": 4,
+          "orientation": "front",
+          "meta": {
+            "manifestKey": "furniture_desk",
+            "spriteKey": "furniture_desk",
+            "footprintW": 3,
+            "footprintH": 2,
+            "backgroundTiles": 1,
+            "furniture_height": 1
+          }
+        },
+        {
+          "id": "bookshelf_tall",
+          "type": "bookshelf",
+          "col": 8,
+          "row": 2,
+          "orientation": "front",
+          "meta": {
+            "manifestKey": "furniture_snack_shelf",
+            "spriteKey": "furniture_snack_shelf",
+            "footprintW": 1,
+            "footprintH": 1,
+            "backgroundTiles": 0,
+            "furniture_height": 3
+          }
+        },
+        {
+          "id": "plant_lobby",
+          "type": "plant",
+          "col": 1,
+          "row": 1,
+          "orientation": "front",
+          "meta": {
+            "manifestKey": "furniture_plant",
+            "spriteKey": "furniture_plant",
+            "footprintW": 1,
+            "footprintH": 1,
+            "backgroundTiles": 0,
+            "furniture_height": 1
+          }
+        }
+      ],
+      "entities": [
+        {
+          "id": "ent_behind_desk",
+          "type": "npc",
+          "name": "Atrás da Mesa",
+          "characterKey": "avatar_dev",
+          "x": 5.5,
+          "y": 4.5,
+          "dir": "s",
+          "moving": false
+        },
+        {
+          "id": "ent_front_desk",
+          "type": "npc",
+          "name": "Frente da Mesa",
+          "characterKey": "avatar_devops",
+          "x": 5.5,
+          "y": 6.5,
+          "dir": "n",
+          "moving": false
+        },
+        {
+          "id": "ent_same_tile_a",
+          "type": "player",
+          "name": "Jogador A",
+          "characterKey": "avatar_player",
+          "x": 3.5,
+          "y": 3.5,
+          "dir": "s",
+          "moving": false
+        },
+        {
+          "id": "ent_same_tile_b",
+          "type": "player",
+          "name": "Jogador B",
+          "characterKey": "avatar_ceo",
+          "x": 3.5,
+          "y": 3.5,
+          "dir": "s",
+          "moving": false
+        },
+        {
+          "id": "ent_north_wall",
+          "type": "npc",
+          "name": "Andando Norte",
+          "characterKey": "avatar_watchdog",
+          "x": 2.5,
+          "y": 1.5,
+          "dir": "e",
+          "moving": true
+        },
+        {
+          "id": "ent_south_wall",
+          "type": "npc",
+          "name": "Andando Sul",
+          "characterKey": "avatar_researcher",
+          "x": 7.5,
+          "y": 8.5,
+          "dir": "w",
+          "moving": true
+        },
+        {
+          "id": "ent_door_north",
+          "type": "npc",
+          "name": "Na Porta",
+          "characterKey": "avatar_dev",
+          "x": 5.5,
+          "y": 1.5,
+          "dir": "s",
+          "moving": true
+        },
+        {
+          "id": "ent_far_west",
+          "type": "npc",
+          "name": "Oeste",
+          "characterKey": "avatar_player",
+          "x": 1.5,
+          "y": 5.5,
+          "dir": "s",
+          "moving": false
+        }
+      ]
+    },
+    "meeting": {
+      "room": {
+        "id": "meeting",
+        "name": "Sala de Reunião",
+        "width": 8,
+        "height": 8,
+        "tileMap": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "doors": [
+          {
+            "col": 3,
+            "row": 7,
+            "orientation": "south",
+            "targetRoom": "office",
+            "label": "Escritório"
+          }
+        ]
+      },
+      "carpetTiles": [],
+      "furniture": [
+        {
+          "id": "meeting_table",
+          "type": "table",
+          "col": 3,
+          "row": 3,
+          "orientation": "front",
+          "meta": {
+            "manifestKey": "furniture_table",
+            "spriteKey": "furniture_table",
+            "footprintW": 2,
+            "footprintH": 2,
+            "backgroundTiles": 1,
+            "furniture_height": 1
+          }
+        }
+      ],
+      "entities": [
+        {
+          "id": "mtg_host",
+          "type": "npc",
+          "name": "Anfitrião",
+          "characterKey": "avatar_ceo",
+          "x": 3.5,
+          "y": 2.5,
+          "dir": "s",
+          "moving": false
+        },
+        {
+          "id": "mtg_guest",
+          "type": "player",
+          "name": "Convidado",
+          "characterKey": "avatar_player",
+          "x": 3.5,
+          "y": 5.5,
+          "dir": "n",
+          "moving": false
+        }
+      ]
+    }
+  }
+}

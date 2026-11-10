@@ -1,0 +1,109 @@
+# Nephy → Morgana: Architecture to Implementation Contract
+# FROZEN - Do not modify without Nephy approval
+contract_version: "1.0"
+issued_by: "Nephy-Arquitetura"
+issued_at: "2026-11-09T10:00:00Z"
+expires_at: null
+
+boundaries:
+  morgana_owns:
+    - "src/**/*.gd"
+    - "src/**/*.cs"
+    - "Assets/**/*.cs"
+    - "Source/**/*.cpp"
+    - "Source/**/*.h"
+    - "tests/**/*"
+    - "tools/**/*"
+    - "prototypes/**/*"
+
+  nephy_owns:
+    - "docs/architecture/**"
+    - "design/gdd/**"
+    - "design/registry/**"
+    - ".hermes/agents/**"
+    - ".hermes/skills/hermes-architecture-*"
+    - ".hermes/skills/hermes-design-*"
+    - "HERMES.md"
+    - "AGENTS.md"
+    - "project.yaml"
+
+  shared_readonly:
+    - "design/narrative/**"
+    - "design/levels/**"
+    - "design/balance/**"
+    - "assets/**"
+    - "docs/engine-reference/**"
+
+interfaces:
+  - name: "GameSystemInterface"
+    file: "src/core/game_system.gd"
+    methods:
+      - "initialize(config: Dictionary) -> void"
+      - "update(delta: float) -> void"
+      - "shutdown() -> void"
+      - "get_state() -> Dictionary"
+    events:
+      - "system_ready"
+      - "system_error"
+
+  - name: "SaveLoadInterface"
+    file: "src/core/save_load.gd"
+    methods:
+      - "save(slot: int, data: Dictionary) -> Error"
+      - "load(slot: int) -> Dictionary"
+      - "list_saves() -> Array[int]"
+      - "delete(slot: int) -> Error"
+
+  - name: "AudioInterface"
+    file: "src/audio/audio_manager.gd"
+    methods:
+      - "play_sfx(name: String, position: Vector3 = null) -> void"
+      - "play_music(name: String, fade: float = 1.0) -> void"
+      - "set_volume(bus: String, volume: float) -> void"
+      - "stop_all() -> void"
+
+acceptance_criteria:
+  - test: "test_game_system_interface.gd"
+    command: "godot --headless --script test_game_system_interface.gd"
+    expected_exit_code: 0
+    must_pass: true
+
+  - test: "test_save_load_interface.gd"
+    command: "godot --headless --script test_save_load_interface.gd"
+    expected_exit_code: 0
+    must_pass: true
+
+  - test: "test_audio_interface.gd"
+    command: "godot --headless --script test_audio_interface.gd"
+    expected_exit_code: 0
+    must_pass: true
+
+  - gate: "max_lines_per_file"
+    threshold: 350
+    tool: "eslint/ruff/clippy"
+    must_pass: true
+
+  - gate: "no_direct_console"
+    pattern: 'print\(|console\.log\(|GD\.print\('
+    must_pass: true
+
+  - gate: "no_direct_data_access"
+    pattern: 'get_node\(|\$[A-Z]'
+    must_pass: false
+
+dependencies:
+  - "Godot 4.3+ installed"
+  - "project.yaml.engine.name == 'godot'"
+  - "docs/engine-reference/godot/VERSION.md exists"
+  - ".hermes/skills/hermes-test-setup installed"
+
+handoff_protocol:
+  1: "Nephy writes .hermes/contracts/arch-to-impl.yaml"
+  2: "Nephy runs validation: python validate_contract.py arch-to-impl.yaml"
+  3: "If PASS -> Notifies Liruh to dispatch Morgana"
+  4: "Morgana reads contract COMPLETE before writing ANY code"
+  5: "Morgana does NOT edit files outside morgana_owns"
+  6: "Morgana implements interfaces EXACT (signature, names, types)"
+  7: "Morgana runs acceptance_criteria BEFORE reporting completion"
+  8: "If interface diverges from contract -> Morgana documents divergence in code comment"
+  9: "Morgana does NOT alter contract -> escalates to Nephy via Liruh"

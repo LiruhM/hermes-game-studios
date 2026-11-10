@@ -1,0 +1,115 @@
+# Liruh → All: Operations Services Contract
+# Published by Liruh (Operadora-Chefe)
+contract_version: "1.0"
+issued_by: "Liruh-Operacao"
+issued_at: "2026-11-09T08:00:00Z"
+expires_at: null
+
+services:
+  sprint_management:
+    artifacts:
+      - "production/sprints/sprint-NN.md"
+      - "production/sprints/sprint-status.yaml"
+    operations:
+      - "create_sprint(goals, capacity, stories)"
+      - "update_sprint_status(story_id, status)"
+      - "get_sprint_status()"
+      - "close_sprint()"
+    gates:
+      - "PR-SPRINT"
+      - "PR-PHASE-GATE"
+
+  milestone_management:
+    artifacts:
+      - "production/milestones/milestone-<name>.md"
+    operations:
+      - "define_milestone(name, goals, date, criteria)"
+      - "track_milestone_progress()"
+      - "gate_check(milestone)"
+    gates:
+      - "PR-MILESTONE"
+
+  release_management:
+    artifacts:
+      - "production/releases/release-v<version>.md"
+      - "CHANGELOG.md"
+      - "release-checklist.yaml"
+    operations:
+      - "prepare_release(version, stories)"
+      - "validate_release()"
+      - "execute_release()"
+      - "post_release()"
+    gates:
+      - "PR-PHASE-GATE"
+      - "Launch Checklist"
+
+  risk_management:
+    artifact: "production/risk-register.yaml"
+    operations:
+      - "register_risk(id, description, probability, impact, owner, mitigation)"
+      - "review_risks()"
+      - "escalate_risk(risk_id)"
+
+  coordination:
+    operations:
+      - "dispatch_nephy(task, contract)"
+      - "dispatch_morgana(task, contract)"
+      - "dispatch_debora(task, contract)"
+      - "dispatch_alice(task, contract)"
+      - "wait_for_all(verdicts)"
+      - "ntfy_notify(topic, message)"
+
+  session_management:
+    artifact: ".hermes/memory/active.md"
+    operations:
+      - "checkpoint(state)"
+      - "restore()"
+      - "log_session(end_state)"
+
+dispatch_protocol:
+  1: "Receives demand from owner (or auto-trigger: cron, gate, webhook)"
+  2: "Identifies responsible sector(s)"
+  3: "Reads corresponding contract (arch-to-impl, impl-to-qa, etc.)"
+  4: "Prepares dispatch with: contract + DNA + explicit boundary + task"
+  5: "Uses delegate_task with tasks array (native JSON, never string)"
+  6: "Waits for verdicts from all dispatched sectors"
+  7: "Applies escalation rule: NOT READY > CONCERNS > NOT ASSESSED > READY"
+  8: "If PASS -> authorizes next phase / notifies owner"
+  9: "If FAIL -> reports blockers, does NOT advance, awaits fix"
+  10: "Records everything in active.md + session-logs/"
+
+monitoring:
+  cron_jobs:
+    - name: "resilience-validation"
+      schedule: "*/5 * * * *"
+      script: "scripts/resilience_validation.py --once"
+    - name: "daily-backup"
+      schedule: "0 3 * * *"
+      script: "scripts/backup.sh"
+    - name: "weekly-token-audit"
+      schedule: "0 4 * * 0"
+      script: "scripts/token-audit.sh --save"
+    - name: "progress-watchdog"
+      schedule: "0 * * * *"
+      script: "scripts/progress_watchdog.py"
+      delivers: "ntfy"
+
+  health_checks:
+    - "hermes gateway status (every 30s)"
+    - "mempalace MCP health (every 60s)"
+    - "memory-substrate API health (every 60s)"
+    - "delegate_task queue depth (every dispatch)"
+
+ntfy_integration:
+  topics:
+    production: "hermes-mathe-r8gemiyxxm"
+  priority_map:
+    circuit_opened: "high"
+    degradation_escalated: "high"
+    fallback_activated: "default"
+    provider_down: "urgent"
+    provider_restored: "default"
+    dispatch_completed: "default"
+    dispatch_failed: "high"
+    milestone_at_risk: "high"
+    sprint_blocked: "high"

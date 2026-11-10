@@ -1,0 +1,438 @@
+# Hermes Game Studios — Machine-Readable Project Configuration
+# Source of truth for engine, specialists, modes, paths, and contracts
+
+project:
+  name: "Hermes Game Studios"
+  version: "0.1.0"
+  description: "Native Hermes (Nous Research) game development studio template"
+  owner: "Matheus"
+  created: "2026-11-09"
+
+# Engine Configuration (RESOLVES CODE ROOTS)
+engine:
+  name: "godot"                    # godot | unity | unreal
+  version: "4.3"
+  code_root: "src/"                # Auto-resolved per engine
+  test_root: "tests/"              # Auto-resolved per engine
+  assets_root: "assets/"           # Auto-resolved per engine
+  godot:
+    version: "4.3"
+    language: "gdscript"           # gdscript | csharp
+    gdextension: false
+  unity:
+    version: "2022.3"
+    script_backend: "csharp"
+    addressables: true
+    dots: false
+  unreal:
+    version: "5.4"
+    cpp_standard: "C++20"
+    gas: true
+    replication: true
+
+# Model Tiers (Hermes Native)
+model_tiers:
+  architecture: "nvidia/nemotron-3-ultra"    # opus-equivalent (Directors)
+  implementation: "nvidia/nemotron-3-ultra"  # sonnet-equivalent (Specialists)
+  inherit: "nvidia/nemotron-3-ultra"         # Session parent (default)
+
+# Review Mode (Controls Gate Execution)
+review_mode:
+  current: "full"                  # solo | lean | full
+  # solo:    SKIP all phase gates, SKIP all director gates
+  # lean:    Phase gates only, PR minimal, TD+PR standard, all 4 full
+  # full:    All phase gates, All 4 directors at every phase gate
+
+# Sector Configuration
+sectors:
+  nephy:
+    chief: "Nephy-Arquitetura"
+    domain: "Architecture & Design"
+    agents: ["creative-director", "technical-director", "art-director", "audio-director", "narrative-director", "game-designer", "level-designer", "systems-designer", "ux-designer", "writer", "world-builder"]
+    owns: ["docs/architecture/**", "design/gdd/**", "design/registry/**", ".hermes/agents/**", ".hermes/skills/hermes-architecture-*", ".hermes/skills/hermes-design-*", "HERMES.md", "AGENTS.md", "project.yaml"]
+    readonly: ["design/narrative/**", "design/levels/**", "design/balance/**", "assets/**", "docs/engine-reference/**"]
+  morgana:
+    chief: "Morgana-Implementacao"
+    domain: "Implementation & Code"
+    agents: ["lead-programmer", "godot-specialist", "godot-gdscript-specialist", "godot-csharp-specialist", "godot-shader-specialist", "godot-gdextension-specialist", "unity-specialist", "unity-ui-specialist", "unity-shader-specialist", "unity-dots-specialist", "unity-addressables-specialist", "unreal-specialist", "ue-blueprint-specialist", "ue-gas-specialist", "ue-replication-specialist", "ue-umg-specialist", "gameplay-programmer", "engine-programmer", "ai-programmer", "network-programmer", "tools-programmer", "ui-programmer", "technical-artist", "sound-designer", "prototyper"]
+    owns: ["src/**/*.gd", "src/**/*.cs", "Assets/**/*.cs", "Source/**/*.cpp", "Source/**/*.h", "tests/**/*", "tools/**/*", "prototypes/**/*"]
+    readonly: ["design/narrative/**", "design/levels/**", "design/balance/**", "assets/**", "docs/engine-reference/**", "docs/architecture/**", "design/gdd/**"]
+    forbidden: ["docs/architecture/**", "design/gdd/**", "design/registry/**", ".hermes/agents/**", "HERMES.md", "project.yaml"]
+  debora:
+    chief: "Debora-Qualidade"
+    domain: "QA, Tests, Validation"
+    agents: ["qa-lead", "qa-tester", "performance-analyst", "security-engineer", "accessibility-specialist"]
+    owns: []  # Debora validates, doesn't own production files
+    readonly: ["**/*"]  # Reads everything for validation
+  alice:
+    chief: "Alice-Curadoria"
+    domain: "Knowledge, Research, Docs"
+    agents: []  # Alice is a service provider, not a dispatched agent
+    services: ["vault_para", "mempalace", "memory_substrate", "research", "skill_authoring"]
+    vault_path: "~/Hermes_Brain"
+    mempalace_endpoint: "http://localhost:8765"
+    memory_substrate_api: "http://127.0.0.1:8766"
+  liruh:
+    chief: "Liruh-Operacao"
+    domain: "Production, Ops, Release"
+    agents: ["producer", "economy-designer", "localization-lead", "live-ops-designer", "devops-engineer", "analytics-engineer", "community-manager", "release-manager"]
+    services: ["sprint_management", "milestone_management", "release_management", "risk_management", "coordination", "session_management"]
+    ntfy_topic: "hermes-mathe-r8gemiyxxm"
+
+# Agent Registry (49 agents, 1:1 from CCGS)
+agents:
+  # Directors (Architecture tier)
+  creative-director: { role: "Creative Director", sector: "nephy", model_tier: "architecture", gates: ["CD-PILLARS", "CD-GDD-ALIGN", "CD-SYSTEMS", "CD-NARRATIVE", "CD-PLAYTEST", "CD-PHASE-GATE"] }
+  technical-director: { role: "Technical Director", sector: "nephy", model_tier: "architecture", gates: ["TD-SYSTEM-BOUNDARY", "TD-FEASIBILITY", "TD-ARCHITECTURE", "TD-ADR", "TD-ENGINE-RISK", "TD-PHASE-GATE", "TD-MANIFEST", "TD-CHANGE-IMPACT"] }
+  producer: { role: "Producer", sector: "liruh", model_tier: "architecture", gates: ["PR-SCOPE", "PR-SPRINT", "PR-MILESTONE", "PR-EPIC", "PR-PHASE-GATE"] }
+  art-director: { role: "Art Director", sector: "nephy", model_tier: "architecture", gates: ["AD-CONCEPT-VISUAL", "AD-ART-BIBLE", "AD-PHASE-GATE", "AD-VISUAL"] }
+  audio-director: { role: "Audio Director", sector: "nephy", model_tier: "architecture", gates: ["AD-PHASE-GATE"] }  # shares AD-PHASE-GATE
+  narrative-director: { role: "Narrative Director", sector: "nephy", model_tier: "architecture", gates: ["ND-CONSISTENCY", "CD-NARRATIVE"] }
+  
+  # Leads
+  game-designer: { role: "Lead Game Designer", sector: "nephy", model_tier: "inherit", gates: [] }
+  lead-programmer: { role: "Lead Programmer", sector: "morgana", model_tier: "sonnet", gates: ["LP-FEASIBILITY", "LP-CODE-REVIEW"] }
+  qa-lead: { role: "QA Lead", sector: "debora", model_tier: "inherit", gates: ["QL-STORY-READY", "QL-TEST-COVERAGE"] }
+  level-designer: { role: "Level Designer", sector: "nephy", model_tier: "inherit", gates: [] }
+  systems-designer: { role: "Systems Designer", sector: "nephy", model_tier: "inherit", gates: [] }
+  economy-designer: { role: "Economy Designer", sector: "liruh", model_tier: "inherit", gates: [] }
+  localization-lead: { role: "Localization Lead", sector: "liruh", model_tier: "inherit", gates: [] }
+  live-ops-designer: { role: "Live Ops Designer", sector: "liruh", model_tier: "inherit", gates: [] }
+  
+  # Engine Specialists (Morgana)
+  godot-specialist: { role: "Godot Engine Lead", sector: "morgana", model_tier: "inherit", engine: "godot", gates: [] }
+  godot-gdscript-specialist: { role: "Godot GDScript Sub", sector: "morgana", model_tier: "implementation", engine: "godot", gates: [] }
+  godot-csharp-specialist: { role: "Godot C# Sub", sector: "morgana", model_tier: "implementation", engine: "godot", gates: [] }
+  godot-shader-specialist: { role: "Godot Shader Sub", sector: "morgana", model_tier: "implementation", engine: "godot", gates: [] }
+  godot-gdextension-specialist: { role: "Godot GDExtension Sub", sector: "morgana", model_tier: "implementation", engine: "godot", gates: [] }
+  unity-specialist: { role: "Unity Engine Lead", sector: "morgana", model_tier: "inherit", engine: "unity", gates: [] }
+  unity-ui-specialist: { role: "Unity UI Sub", sector: "morgana", model_tier: "implementation", engine: "unity", gates: [] }
+  unity-shader-specialist: { role: "Unity Shader Sub", sector: "morgana", model_tier: "implementation", engine: "unity", gates: [] }
+  unity-dots-specialist: { role: "Unity DOTS/ECS Sub", sector: "morgana", model_tier: "implementation", engine: "unity", gates: [] }
+  unity-addressables-specialist: { role: "Unity Addressables Sub", sector: "morgana", model_tier: "implementation", engine: "unity", gates: [] }
+  unreal-specialist: { role: "Unreal Engine Lead", sector: "morgana", model_tier: "inherit", engine: "unreal", gates: [] }
+  ue-blueprint-specialist: { role: "Unreal Blueprint Sub", sector: "morgana", model_tier: "implementation", engine: "unreal", gates: [] }
+  ue-gas-specialist: { role: "Unreal GAS Sub", sector: "morgana", model_tier: "implementation", engine: "unreal", gates: [] }
+  ue-replication-specialist: { role: "Unreal Replication Sub", sector: "morgana", model_tier: "implementation", engine: "unreal", gates: [] }
+  ue-umg-specialist: { role: "Unreal UMG Sub", sector: "morgana", model_tier: "implementation", engine: "unreal", gates: [] }
+  
+  # Gameplay & Systems (Morgana)
+  gameplay-programmer: { role: "Gameplay Programmer", sector: "morgana", model_tier: "inherit", gates: [] }
+  engine-programmer: { role: "Engine Programmer", sector: "morgana", model_tier: "inherit", gates: [] }
+  ai-programmer: { role: "AI Programmer", sector: "morgana", model_tier: "implementation", gates: [] }
+  network-programmer: { role: "Network Programmer", sector: "morgana", model_tier: "inherit", gates: [] }
+  tools-programmer: { role: "Tools Programmer", sector: "morgana", model_tier: "inherit", gates: [] }
+  ui-programmer: { role: "UI Programmer", sector: "morgana", model_tier: "inherit", gates: [] }
+  technical-artist: { role: "Technical Artist", sector: "morgana", model_tier: "inherit", gates: [] }
+  sound-designer: { role: "Sound Designer", sector: "morgana", model_tier: "inherit", gates: [] }
+  
+  # QA & Ops (Debora/Liruh)
+  qa-tester: { role: "QA Tester", sector: "debora", model_tier: "inherit", gates: [] }
+  performance-analyst: { role: "Performance Analyst", sector: "debora", model_tier: "inherit", gates: [] }
+  security-engineer: { role: "Security Engineer", sector: "debora", model_tier: "inherit", gates: [] }
+  accessibility-specialist: { role: "Accessibility Specialist", sector: "debora", model_tier: "inherit", gates: [] }
+  devops-engineer: { role: "DevOps Engineer", sector: "liruh", model_tier: "implementation", gates: [] }
+  analytics-engineer: { role: "Analytics Engineer", sector: "liruh", model_tier: "inherit", gates: [] }
+  community-manager: { role: "Community Manager", sector: "liruh", model_tier: "implementation", gates: [] }
+  
+  # Creative (Nephy)
+  writer: { role: "Writer", sector: "nephy", model_tier: "inherit", gates: [] }
+  world-builder: { role: "World Builder", sector: "nephy", model_tier: "inherit", gates: [] }
+  ux-designer: { role: "UX Designer", sector: "nephy", model_tier: "inherit", gates: [] }
+  
+  # Specialized
+  prototyper: { role: "Prototyper", sector: "morgana", model_tier: "implementation", gates: [] }
+  release-manager: { role: "Release Manager", sector: "liruh", model_tier: "inherit", gates: [] }
+
+# Skills Registry (74 skills from CCGS slash commands)
+skills:
+  # Onboarding
+  hermes-start: { category: "Onboarding", type: "skill", source: "start" }
+  hermes-help: { category: "Onboarding", type: "prompt", source: "help" }
+  hermes-project-stage-detect: { category: "Onboarding", type: "skill", source: "project-stage-detect" }
+  hermes-setup-engine: { category: "Onboarding", type: "skill", source: "setup-engine" }
+  hermes-adopt: { category: "Onboarding", type: "skill", source: "adopt" }
+  
+  # Game Design
+  hermes-brainstorm: { category: "Game Design", type: "prompt", source: "brainstorm" }
+  hermes-map-systems: { category: "Game Design", type: "skill", source: "map-systems" }
+  hermes-design-system: { category: "Game Design", type: "skill", source: "design-system" }
+  hermes-quick-design: { category: "Game Design", type: "skill", source: "quick-design" }
+  hermes-review-all-gdds: { category: "Game Design", type: "skill", model_tier: "architecture", source: "review-all-gdds" }
+  hermes-propagate-design-change: { category: "Game Design", type: "skill", source: "propagate-design-change" }
+  
+  # Art & Assets
+  hermes-art-bible: { category: "Art & Assets", type: "skill", source: "art-bible" }
+  hermes-asset-spec: { category: "Art & Assets", type: "skill", source: "asset-spec" }
+  hermes-asset-audit: { category: "Art & Assets", type: "skill", source: "asset-audit" }
+  
+  # UX & Interface
+  hermes-ux-design: { category: "UX & Interface", type: "skill", source: "ux-design" }
+  hermes-ux-review: { category: "UX & Interface", type: "skill", source: "ux-review" }
+  
+  # Architecture
+  hermes-create-architecture: { category: "Architecture", type: "skill", source: "create-architecture" }
+  hermes-architecture-decision: { category: "Architecture", type: "skill", source: "architecture-decision" }
+  hermes-architecture-review: { category: "Architecture", type: "skill", model_tier: "architecture", source: "architecture-review" }
+  hermes-create-control-manifest: { category: "Architecture", type: "skill", source: "create-control-manifest" }
+  
+  # Stories & Sprints
+  hermes-create-epics: { category: "Stories & Sprints", type: "skill", source: "create-epics" }
+  hermes-create-stories: { category: "Stories & Sprints", type: "skill", source: "create-stories" }
+  hermes-dev-story: { category: "Stories & Sprints", type: "skill", source: "dev-story" }
+  hermes-sprint-plan: { category: "Stories & Sprints", type: "skill", source: "sprint-plan" }
+  hermes-sprint-status: { category: "Stories & Sprints", type: "skill", source: "sprint-status" }
+  hermes-story-readiness: { category: "Stories & Sprints", type: "skill", source: "story-readiness" }
+  hermes-story-done: { category: "Stories & Sprints", type: "skill", source: "story-done" }
+  hermes-estimate: { category: "Stories & Sprints", type: "skill", source: "estimate" }
+  
+  # Reviews & Analysis
+  hermes-design-review: { category: "Reviews & Analysis", type: "skill", source: "design-review" }
+  hermes-code-review: { category: "Reviews & Analysis", type: "skill", source: "code-review" }
+  hermes-balance-check: { category: "Reviews & Analysis", type: "skill", source: "balance-check" }
+  hermes-content-audit: { category: "Reviews & Analysis", type: "skill", source: "content-audit" }
+  hermes-scope-check: { category: "Reviews & Analysis", type: "skill", source: "scope-check" }
+  hermes-perf-profile: { category: "Reviews & Analysis", type: "skill", source: "perf-profile" }
+  hermes-tech-debt: { category: "Reviews & Analysis", type: "skill", source: "tech-debt" }
+  hermes-gate-check: { category: "Reviews & Analysis", type: "skill", model_tier: "architecture", source: "gate-check" }
+  hermes-consistency-check: { category: "Reviews & Analysis", type: "skill", source: "consistency-check" }
+  hermes-security-audit: { category: "Reviews & Analysis", type: "skill", source: "security-audit" }
+  
+  # QA & Testing
+  hermes-qa-plan: { category: "QA & Testing", type: "skill", source: "qa-plan" }
+  hermes-smoke-check: { category: "QA & Testing", type: "skill", source: "smoke-check" }
+  hermes-soak-test: { category: "QA & Testing", type: "skill", source: "soak-test" }
+  hermes-regression-suite: { category: "QA & Testing", type: "skill", source: "regression-suite" }
+  hermes-test-setup: { category: "QA & Testing", type: "skill", source: "test-setup" }
+  hermes-test-helpers: { category: "QA & Testing", type: "skill", source: "test-helpers" }
+  hermes-test-evidence-review: { category: "QA & Testing", type: "skill", source: "test-evidence-review" }
+  hermes-test-flakiness: { category: "QA & Testing", type: "skill", source: "test-flakiness" }
+  hermes-skill-test: { category: "QA & Testing", type: "skill", source: "skill-test" }
+  hermes-skill-improve: { category: "QA & Testing", type: "skill", source: "skill-improve" }
+  
+  # Production
+  hermes-milestone-review: { category: "Production", type: "skill", source: "milestone-review" }
+  hermes-retrospective: { category: "Production", type: "skill", source: "retrospective" }
+  hermes-bug-report: { category: "Production", type: "skill", source: "bug-report" }
+  hermes-bug-triage: { category: "Production", type: "skill", source: "bug-triage" }
+  hermes-reverse-document: { category: "Production", type: "skill", source: "reverse-document" }
+  hermes-playtest-report: { category: "Production", type: "skill", source: "playtest-report" }
+  
+  # Release
+  hermes-release-checklist: { category: "Release", type: "skill", source: "release-checklist" }
+  hermes-launch-checklist: { category: "Release", type: "skill", source: "launch-checklist" }
+  hermes-changelog: { category: "Release", type: "skill", source: "changelog" }
+  hermes-patch-notes: { category: "Release", type: "skill", source: "patch-notes" }
+  hermes-hotfix: { category: "Release", type: "skill", source: "hotfix" }
+  hermes-day-one-patch: { category: "Release", type: "skill", source: "day-one-patch" }
+  
+  # Creative & Content
+  hermes-prototype: { category: "Creative & Content", type: "skill", source: "prototype" }
+  hermes-vertical-slice: { category: "Creative & Content", type: "skill", source: "vertical-slice" }
+  hermes-onboard: { category: "Creative & Content", type: "skill", source: "onboard" }
+  hermes-localize: { category: "Creative & Content", type: "skill", source: "localize" }
+  
+  # Team Orchestration
+  hermes-team-combat: { category: "Team Orchestration", type: "skill", source: "team-combat" }
+  hermes-team-narrative: { category: "Team Orchestration", type: "skill", source: "team-narrative" }
+  hermes-team-ui: { category: "Team Orchestration", type: "skill", source: "team-ui" }
+  hermes-team-release: { category: "Team Orchestration", type: "skill", source: "team-release" }
+  hermes-team-polish: { category: "Team Orchestration", type: "skill", source: "team-polish" }
+  hermes-team-audio: { category: "Team Orchestration", type: "skill", source: "team-audio" }
+  hermes-team-level: { category: "Team Orchestration", type: "skill", source: "team-level" }
+  hermes-team-live-ops: { category: "Team Orchestration", type: "skill", source: "team-live-ops" }
+  hermes-team-qa: { category: "Team Orchestration", type: "skill", source: "team-qa" }
+
+# Hooks Configuration (19 hooks → Python)
+hooks:
+  session_start:
+    - "log-agent.py"
+    - "log-instructions.py"
+    - "session-start.py"
+  session_end:
+    - "log-agent-stop.py"
+    - "session-stop.py"
+    - "pre-compact.py"
+  pre_write:
+    - "validate-write.py"
+    - "validate-agent-artifact.py"
+    - "validate-registry.py"
+    - "validate-skill-change.py"
+  pre_read:
+    - "validate-read.py"
+  pre_commit:
+    - "validate-commit.py"
+    - "validate-assets.py"
+  pre_push:
+    - "validate-push.py"
+  utility:
+    - "notify.py"
+    - "detect-gaps.py"
+    - "update-check.py"
+    - "yaml-helper.py"
+
+# Scripts (39 scripts from CCGS)
+scripts:
+  - "adr-dep-graph.sh"
+  - "adr-status.sh"
+  - "agent-check.sh"
+  - "artifact-check.sh"
+  - "asset-scan.sh"
+  - "bug-stats.sh"
+  - "code-markers.sh"
+  - "compat-inventory.sh"
+  - "config-set.sh"
+  - "content-count.sh"
+  - "debt-register.sh"
+  - "flaky-stats.sh"
+  - "gdd-structure-check.sh"
+  - "godot-parse-check.gd"
+  - "hook-input.sh"
+  - "inputs-check.sh"
+  - "md-section.sh"
+  - "migrate-v1-config.sh"
+  - "plan-math.sh"
+  - "project-coherence.sh"
+  - "project-state.sh"
+  - "read-guard.sh"
+  - "registry.sh"
+  - "review-receipts.sh"
+  - "review-scope.sh"
+  - "rotate-session-state.sh"
+  - "session-state.sh"
+  - "set-stage.sh"
+  - "skill-lint.sh"
+  - "story-facts.sh"
+  - "story-status.sh"
+  - "test-run.sh"
+  - "test-scaffold.sh"
+  - "write-guard.sh"
+  - "yaml-get.awk"
+
+# Prompts (Structured reusable prompts)
+prompts:
+  - "brainstorm-to-plan.md"
+  - "execute-wave.md"
+  - "install-quality-gates.md"
+  - "refactor-large-files.md"
+  - "systematic-debugging.md"
+  - "verify-setup.md"
+  - "bootstrap-memory.md"
+
+# Rules / Lint Configuration
+rules:
+  eslint:
+    core: "eslint-core-rules.cjs"
+    utils: "eslint-utils.cjs"
+    index: "eslint-index.cjs"
+  ruff: "ruff-rules.toml"
+  clippy: "clippy-rules.toml"
+
+# Contracts (Frozen inter-sector YAML)
+contracts:
+  - "arch-to-impl.yaml"      # Nephy → Morgana
+  - "impl-to-qa.yaml"        # Morgana → Debora
+  - "qa-report.yaml"         # Debora → Nephy/Morgana
+  - "curator-services.yaml"  # Alice → All
+  - "ops-services.yaml"      # Liruh → All
+
+# Directories (Auto-created)
+directories:
+  - "src/"
+  - "assets/art/"
+  - "assets/audio/"
+  - "assets/vfx/"
+  - "assets/shaders/"
+  - "assets/data/"
+  - "design/gdd/"
+  - "design/narrative/characters/"
+  - "design/narrative/dialogue/"
+  - "design/levels/"
+  - "design/balance/"
+  - "design/registry/"
+  - "docs/architecture/"
+  - "docs/engine-reference/godot/modules/"
+  - "docs/engine-reference/unity/modules/"
+  - "docs/engine-reference/unreal/modules/"
+  - "docs/api/"
+  - "docs/postmortems/"
+  - "docs/registry/"
+  - "tests/unit/"
+  - "tests/integration/"
+  - "prototypes/"
+  - "tools/ci/"
+  - "tools/build/"
+  - "tools/asset-pipeline/"
+  - "production/sprints/"
+  - "production/milestones/"
+  - "production/releases/"
+  - "production/session-state/"
+  - "production/session-logs/"
+  - "studio-tests/agents/directors/"
+  - "studio-tests/agents/leads/"
+  - "studio-tests/agents/specialists/"
+  - "studio-tests/agents/engine/godot/"
+  - "studio-tests/agents/engine/unity/"
+  - "studio-tests/agents/engine/unreal/"
+  - "studio-tests/agents/operations/"
+  - "studio-tests/agents/qa/"
+  - "studio-tests/skills/gate/"
+  - "studio-tests/skills/review/"
+  - "studio-tests/skills/authoring/"
+  - "studio-tests/skills/readiness/"
+  - "studio-tests/skills/pipeline/"
+  - "studio-tests/skills/analysis/"
+  - "studio-tests/skills/team/"
+  - "studio-tests/skills/sprint/"
+  - "studio-tests/skills/utility/"
+  - "studio-tests/templates/"
+  - "studio-tests/results/"
+  - ".github/CODEOWNERS"
+  - ".github/ISSUE_TEMPLATE/"
+  - ".github/PULL_REQUEST_TEMPLATE.md"
+  - ".github/workflows/"
+
+# Gitignore Patterns
+gitignore:
+  - ".hermes/memory/active.md"
+  - ".hermes/memory/session-logs/"
+  - ".hermes/memory/skill-state/"
+  - ".hermes/settings.local.json"
+  - "production/session-state/active.md"
+  - "production/session-logs/"
+  - "studio-tests/results/"
+  - ".DS_Store"
+  - "Thumbs.db"
+  - ".vscode/"
+  - ".idea/"
+  - "*.swp"
+  - "*.swo"
+  - "*.import"
+  - "*.translation"
+  - "export_presets.cfg"
+  - "Library/"
+  - "Temp/"
+  - "Obj/"
+  - "Build/"
+  - "Logs/"
+  - "UserSettings/"
+  - "Binaries/"
+  - "Intermediate/"
+  - "DerivedDataCache/"
+  - "Saved/"
+
+# Symlinks (for compatibility)
+symlinks:
+  - { target: ".hermes/memory/active.md", link: "production/session-state/active.md" }
+  - { target: ".hermes/memory/session-logs", link: "production/session-logs" }
+
+# CI/CD
+ci:
+  provider: "github"
+  workflows:
+    - "ci.yml"
+
+# Legacy Compatibility
+legacy:
+  claude_md: "CLAUDE.md"           # Redirects to HERMES.md
+  settings_json: ".claude/settings.json"  # Redirects to .hermes/settings.json

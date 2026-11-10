@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Run Ruff
+        run: ruff check .
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+
+      - name: Run Clippy
+        run: cargo clippy -- -D warnings
+
+  validate-template:
+    name: Validate Template Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required files
+        run: |
+          test -f LICENSE
+          test -f CONTRIBUTING.md
+          test -f SECURITY.md
+          test -f CHANGELOG.md
+          test -f .github/CODEOWNERS
+          test -f .github/ISSUE_TEMPLATE/bug_report.md
+          test -f .github/ISSUE_TEMPLATE/feature_request.md
+          test -f .github/workflows/ci.yml
+          echo "All release files present"
+
+      - name: Verify core template structure
+        run: |
+          test -d .hermes/skills
+          test -d .hermes/agents
+          test -d .hermes/hooks
+          test -d .hermes/scripts
+          test -d .hermes/rules
+          test -d .hermes/prompts
+          test -d .hermes/contracts
+          test -f HERMES.md
+          test -f AGENTS.md
+          test -f project.yaml
+          test -f README.md
+          test -f package.json
+          echo "Core structure valid"
+
+      - name: Count skills
+        run: |
+          SKILL_COUNT=$(find .hermes/skills -mindepth 1 -maxdepth 1 -type d | wc -l)
+          echo "Skills found: $SKILL_COUNT"
+          test "$SKILL_COUNT" -ge 70
+
+      - name: Count agents
+        run: |
+          AGENT_COUNT=$(find .hermes/agents -name "*.md" | wc -l)
+          echo "Agents found: $AGENT_COUNT"
+          test "$AGENT_COUNT" -ge 45
+
+  ntfy-test:
+    name: NTFy Connectivity
+    runs-on: ubuntu-latest
+    if: env.NTFY_TOPIC != ''
+    steps:
+      - name: Test ntfy connectivity
+        run: |
+          curl -s -d "CI test from GitHub Actions" "https://ntfy.sh/${NTFY_TOPIC}"
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
